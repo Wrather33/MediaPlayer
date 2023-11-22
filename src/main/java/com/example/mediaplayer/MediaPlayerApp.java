@@ -304,10 +304,13 @@ public class MediaPlayerApp extends Application {
                                             files.add(mediaFile);
                                             fileListView.getSelectionModel().select(mediaFile);
                                         }
-                                        if(autoboolean.get()){
-                                            controller.fire();
-                                        }
+                                        mediaPlayer.autoPlayProperty().setValue(autoboolean.get());
                                         mediaPlayer.muteProperty().setValue(mute.get());
+                                    }
+                                });
+                                mediaPlayer.autoPlayProperty().addListener((observable, oldValue, newValue) -> {
+                                    if(newValue){
+                                        controller.fire();
                                     }
                                 });
 
