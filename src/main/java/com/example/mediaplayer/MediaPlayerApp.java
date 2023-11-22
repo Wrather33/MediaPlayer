@@ -83,6 +83,7 @@ public class MediaPlayerApp extends Application {
         Button prev = new Button("Prev");
         Button autoplay = new Button("AutoPlay: enable");
         AtomicBoolean autoboolean = new AtomicBoolean(false);
+        AtomicBoolean mute = new AtomicBoolean(false);
         remove.setFont(font);
         openButton.setOnAction(
                 new EventHandler<ActionEvent>() {
@@ -126,7 +127,7 @@ public class MediaPlayerApp extends Application {
                                 mediaView.setFitWidth(primaryStage.getWidth() / 2);
                                 mediaView.setFitHeight(primaryStage.getHeight() / 2);
                                 root.getChildren().add(mediaView);
-                                hBox.getChildren().addAll(next, controller, stop, prev, auto, rep, autoplay);
+                                hBox.getChildren().addAll(prev, controller, stop, next, auto, rep, autoplay);
                                 boxVol.getChildren().addAll(volreg, sound, volume);
                                 volume.setMaxWidth(primaryStage.getWidth()/2);
                                 progress.setMaxWidth(primaryStage.getWidth()/2);
@@ -137,9 +138,6 @@ public class MediaPlayerApp extends Application {
                                 volume.valueProperty().addListener((observable, oldValue, newValue) -> {
                                     sound.setText(String.valueOf((int) (newValue.doubleValue()*100))+"%");
                                     mediaPlayer.setVolume(newValue.doubleValue());
-                                    if(mediaPlayer.isMute()){
-                                        volreg.fire();
-                                    }
 
                                 });
                                 autoplay.setOnAction(event -> {
@@ -185,10 +183,12 @@ public class MediaPlayerApp extends Application {
                                 volreg.setOnAction(event -> {
                                     if(volreg.getText().equals("Mute")){
                                         mediaPlayer.muteProperty().setValue(true);
+                                        mute.set(true);
                                         volreg.setText("Unmute");
                                     }
-                                    else {
+                                    else if(volreg.getText().equals("Unmute")) {
                                         mediaPlayer.muteProperty().setValue(false);
+                                        mute.set(false);
                                         volreg.setText("Mute");
                                     }
                                 });
@@ -244,13 +244,10 @@ public class MediaPlayerApp extends Application {
                                 mediaPlayer.setOnStopped(new Runnable() {
                                     @Override
                                     public void run() {
-                                        mediaPlayer.muteProperty().setValue(false);
                                         mediaPlayer.seek(Duration.ZERO);
                                         if(controller.getText().equals("Pause")){
                                             controller.setText("Play");
-
                                         }
-                                        volreg.setText("Mute");
 
                                     }
                                 });
@@ -310,6 +307,7 @@ public class MediaPlayerApp extends Application {
                                         if(autoboolean.get()){
                                             controller.fire();
                                         }
+                                        mediaPlayer.muteProperty().setValue(mute.get());
                                     }
                                 });
 
