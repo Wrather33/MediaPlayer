@@ -214,11 +214,9 @@ public class MediaPlayerApp extends Application {
                                         fileListView.getSelectionModel().selectPrevious();
                                     }
                                     libraryFile = fileListView.getSelectionModel().getSelectedItem();
-                                    stop.fire();
                                     openButton.fire();
                                 });
                                 next.setOnAction(event -> {
-                                    System.out.println(fileListView.getSelectionModel().getSelectedIndex());
                                     if(fileListView.getSelectionModel().getSelectedIndex() ==
                                     files.size()-1){
                                         fileListView.getSelectionModel().selectFirst();
@@ -227,7 +225,6 @@ public class MediaPlayerApp extends Application {
                                         fileListView.getSelectionModel().selectNext();
                                     }
                                     libraryFile = fileListView.getSelectionModel().getSelectedItem();
-                                    stop.fire();
                                     openButton.fire();
                                 });
 
@@ -296,11 +293,12 @@ public class MediaPlayerApp extends Application {
                                     openButton.fire();
                                 });
                                 mediaPlayer.statusProperty().addListener((ob, oldVal, newVal) -> {
-                                    if (newVal.equals(MediaPlayer.Status.READY) && mediaFile.getDuration() == null) {
+                                    if (newVal.equals(MediaPlayer.Status.READY)) {
                                         mediaFile.setDuration(mediaFile.getMedia().getDuration());
                                         videoDuration.setText(convertDurationMillis((int) mediaFile.getDuration().toMillis()));
                                         progress.setMax(mediaFile.getDuration().toSeconds());
                                         if(mediaList.add(mediaFile)){
+                                            System.out.println("Hey");
                                             files.add(mediaFile);
                                             fileListView.getSelectionModel().select(mediaFile);
                                         }

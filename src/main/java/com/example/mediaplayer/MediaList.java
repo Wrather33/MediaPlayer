@@ -7,17 +7,8 @@ public class MediaList{
     public MediaList(){
         mediaFiles = new ArrayList<>();
     }
-    public boolean contains(MediaFile mediaFile){
-        for (MediaFile med: getMediaFiles()
-             ) {
-            if (mediaFile.equals(med)){
-                return true;
-            }
-        }
-        return false;
-    }
     public boolean add(MediaFile mediaFile) {
-        if(!contains(mediaFile)) {
+        if(!getMediaFiles().contains(mediaFile)) {
             return mediaFiles.add(mediaFile);
         }
         return false;
